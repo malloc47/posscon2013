@@ -1,0 +1,11 @@
+.reveal ul {
+    list-style: none;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+}
+
+.reveal li:before{ 
+    content:"\2014"; 
+    position:relative; 
+    left:-5px;
+}
