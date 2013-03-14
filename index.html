@@ -94,8 +94,8 @@
 
 		  <section>
             <h2>Django <span style="opacity:0.5">compared with</span>
-            Rails</h2>
-            <ul>
+              Rails</h2>
+            <ul style="width:50%">
               <li>Python <span style="opacity:0.5">vs.</span> Ruby
                 <ul>
                   <li style="opacity:0.6">SciPy/Numpy</li>
@@ -106,14 +106,86 @@
               <li>DIY <span style="opacity:0.5">vs.</span> Scaffolding</li>
               <li>First class
                 <ul>
-                  <li>GeoDjango</li>
                   <li>Admin</li>
                   <li>Authentication</li>
+                  <li>Geospatial (GeoDjango)</li>
                 </ul>
               </li>
+              <li>Optimized for content-heavy CRUD apps</li>
             </ul>
 		  </section>
+
+          <section>
+            <h2>MVC <span style="opacity:0.5">vs.</span> MTV</h2>
+            <h3>M<span style="opacity:0.5">odel</span> T<span style="opacity:0.5">emplate</span> V<span style="opacity:0.5">iew</span></h3>
+            <table style="margin-left:auto;margin-right:auto;">
+              <tr><td>Model</td><td>=</td><td>the data itself</td></tr>
+              <tr><td>Template</td><td>=</td><td><em>how</em> the data is presented</td></tr>
+              <tr><td>View</td><td>=</td><td><em>which</em> data is presented</td></tr>
+            </table>
+          </section>
+
+          <section>
+            <h2>Django <span style="opacity:0.5">Design Philosophy</span></h2>
+            <p><a href="https://docs.djangoproject.com/en/dev/misc/design-philosophies/">https://docs.djangoproject.com/en/dev/misc/design-philosophies/</a></p>
+          </section>
 		</section>
+
+        <section>
+          <section>
+            <h1>Organization and Build Environment</h1>
+          </section>
+
+          <section>
+            <h2>Django <span style="opacity:0.5">Files</span></h2>
+            <table style="margin-left:auto;margin-right:auto;">
+              <tr>
+                <td style="vertical-align:top">
+                  <ul>
+                    <li>__init__.py</li>
+                    <li class="fragment grow"  data-fragment-index="1">admin.py</li>
+                    <li>context_processors.py</li>
+                    <li>feeds.py</li>
+                    <li>forms.py</li>
+                    <li>managers.py</li>
+                    <li>middleware.py</li>
+                    <li class="fragment grow"  data-fragment-index="1">models.py</li>
+                  </ul>
+                </td>
+                <td style="vertical-align:top">
+                  <ul>
+                    <li>receivers.py</li>
+                    <li>signals.py</li>
+                    <li>templates/app_name/</li>
+                    <li>templatetags/app_name.py</li>
+                    <li class="fragment grow"  data-fragment-index="1">tests.py</li>
+                    <li>urls.py</li>
+                    <li>views.py</li>
+                  </ul>
+                </td>
+              </tr>
+            </table>
+          </section>
+        </section>
+
+        <section>
+          <h2><span style="opacity:0.5">Fun</span> Django <span style="opacity:0.5">Things</span></h2>
+          <p style="text-align:left">importd &mdash; <a href="http://pythonhosted.org/importd/">http://pythonhosted.org/importd/</a></p>
+          <p style="text-align:left">jython &mdash; <a href="https://docs.djangoproject.com/en/dev/howto/jython/">https://docs.djangoproject.com/en/dev/howto/jython/</a></p>
+          <p style="text-align:left">cheat sheet &mdash; <a href="http://www.mercurytide.co.uk/media/whitepapers/django-cheat-sheet/django10-cheat-sheet.pdf">http://www.mercurytide.co.uk/media/whitepapers/django-cheat-sheet/django10-cheat-sheet.pdf</a></p>
+        </section>
+
+        <section>
+          <pre>
+            <code contenteditable>
+from importd import d # the d is for Django
+
+@d("/")
+def index(request):
+    return d.HttpResponse("hello world")
+            </code>
+          </pre>
+        </section>
 
 	  </div>
 
