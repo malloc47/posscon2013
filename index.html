@@ -175,6 +175,7 @@
 
           <section>
             <h2><span style="opacity:0.5;">Handling</span> Dependencies</h2>
+            <p>the <em>non-root</em> way</p>
             <br />
             <table style="margin-left:auto;margin-right:auto;">
               <tr><td><code><a href="https://github.com/utahta/pythonbrew">pythonbrew</a></code></td><td>&mdash;</td><td>build/install
@@ -212,7 +213,7 @@ pip install -r requirements.txt
           <section>
             <h2>PAAS Support</h2>
             <ul>
-              <li><a href="http://www.heroku.com/">Heroku</a></li>
+              <li><a href="https://devcenter.heroku.com/articles/django">Heroku</a></li>
               <li><a href="http://aws.amazon.com/elasticbeanstalk/">AWS Elastic Beanstalk</a></li>
               <li><a href="https://developers.google.com/appengine/docs/python/cloud-sql/django">GAE</a></li>
               <li><a href="https://openshift.redhat.com/community/get-started/django">OpenShift</a></li>
@@ -229,12 +230,13 @@ pip install -r requirements.txt
 
           <section>
             <h2>Request <span style="opacity:0.5">Handling</h2></h2>
-            <p>Request &rarr; urls.py &rarr; views.py &lt;function&gt; 
-            &rarr;  &lt;template&gt;.html
+            <p>Request &rarr; urls.py &rarr; views.py &lt;function&gt;
+            &rarr; &lt;template&gt;.html
                </p>
           </section>
 
           <section>
+            <p>GET request for /stuff/</p>
             <p>urls<span style="opacity:0.5">.py</span></p>
             <pre><code contenteditable>urlpatterns = patterns('',
     (r'^stuff/$', views.stuff_handler),
@@ -246,7 +248,7 @@ pip install -r requirements.txt
             <br />
             <p>stuff<span style="opacity:0.5">.html</span></p>
             <pre><code contenteditable>&lt;html&gt;
-&lt;head&gt;&lt;title&gt;Page o' Stuff&lt;/title&gt; &lt;/head&gt;
+&lt;head&gt;&lt;title&gt;Page o' Stuff&lt;/title&gt;&lt;/head&gt;
 &lt;body&gt;
 &lt;p&gt; Your name is {{ name }} &lt;/p&gt;
 &lt;/body&gt;&lt;/html&gt;</code></pre>
@@ -262,6 +264,7 @@ pip install -r requirements.txt
           <p style="text-align:left">importd &mdash; <a href="http://pythonhosted.org/importd/">http://pythonhosted.org/importd/</a></p>
           <p style="text-align:left">jython &mdash; <a href="https://docs.djangoproject.com/en/dev/howto/jython/">https://docs.djangoproject.com/en/dev/howto/jython/</a></p>
           <p style="text-align:left">cheat sheet &mdash; <a href="http://www.mercurytide.co.uk/media/whitepapers/django-cheat-sheet/django10-cheat-sheet.pdf">http://www.mercurytide.co.uk/media/whitepapers/django-cheat-sheet/django10-cheat-sheet.pdf</a></p>
+          <!-- http://softwaremaniacs.org/blog/2011/01/07/django-micro-framework/en/ -->
         </section>
 
         <section>
