@@ -268,6 +268,7 @@ simplejson==2.6.1</code></pre>
             <!-- http://pyevolve.sourceforge.net/wordpress/?p=814 -->
             <!-- http://djangosnippets.org/snippets/197/ -->
             <!-- https://github.com/dkukral/everyblock/blob/master/ebpub/ebpub/accounts/middleware.py -->
+            <!-- https://github.com/django-debug-toolbar/django-debug-toolbar -->
           </section>
 
           <section>
@@ -279,6 +280,22 @@ simplejson==2.6.1</code></pre>
         <section>
           <section>
             <h1><span style="opacity:0.5">Custom</span> Fields</h1>
+          </section>
+
+          <section>
+            <h2>Generic <span style="opacity:0.5">Foreign Keys</span></h2>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h1><span style="opacity:0.5">Crypographic</span> Signing</h1>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h1>Fixtures</h1>
           </section>
         </section>
 
@@ -299,15 +316,11 @@ simplejson==2.6.1</code></pre>
         </section>
 
         <section>
-          <pre>
-            <code contenteditable>
-from importd import d # the d is for Django
+          <pre><code contenteditable>from importd import d # the d is for Django
 
 @d("/")
 def index(request):
-    return d.HttpResponse("hello world")
-            </code>
-          </pre>
+    return d.HttpResponse("hello world")</code></pre>
         </section>
 
 	  </div>
