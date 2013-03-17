@@ -109,6 +109,7 @@
                   <li>Admin</li>
                   <li>Authentication</li>
                   <li>Geospatial (GeoDjango)</li>
+                  <li>Form handling (previews, wizards, validation, etc.)</li>
                 </ul>
               </li>
               <li>Optimized for content-heavy CRUD apps</li>
@@ -126,7 +127,7 @@
           </section>
 
           <section>
-            <h2>Django <span style="opacity:0.5">Design Philosophy</span></h2>
+            <h2><span style="opacity:0.5">Django</span> Design Philosophy</h2>
             <p><a href="https://docs.djangoproject.com/en/dev/misc/design-philosophies/">https://docs.djangoproject.com/en/dev/misc/design-philosophies/</a></p>
           </section>
 		</section>
@@ -194,20 +195,12 @@
             <table style="margin-left:auto;margin-right:auto;">
               <tr><td><span style="font-size: 0.8em;"><code>requirements.txt</code></span></td><td>&mdash;</td><td>machine-readable list of dependencies for your project</td></tr>
             </table>
-            <pre>
-              <code contenteditable>
-Django==1.4.3
+            <pre><code contenteditable>Django==1.4.3
 South==0.7.6
 scss==0.8.72
-simplejson==2.6.1
-              </code>
-            </pre>
+simplejson==2.6.1</code></pre>
 	        <p style="text-align:left">which can be read by <code>pip</code></p>
-            <pre>
-              <code contenteditable>
-pip install -r requirements.txt
-              </code>
-            </pre>
+            <pre><code contenteditable>pip install -r requirements.txt</code></pre>
           </section>
 
           <section>
@@ -225,11 +218,11 @@ pip install -r requirements.txt
 
         <section>
           <section>
-            <h1>Django <span style="opacity:0.5">Basics</h1>
+            <h1><span style="opacity:0.5">Django</span> Basics</h1>
           </section>
 
           <section>
-            <h2>Request <span style="opacity:0.5">Handling</h2></h2>
+            <h2>Request <span style="opacity:0.5">Handling</span></h2>
             <p>Request &rarr; urls.py &rarr; views.py &lt;function&gt;
             &rarr; &lt;template&gt;.html
                </p>
@@ -253,9 +246,45 @@ pip install -r requirements.txt
 &lt;p&gt; Your name is {{ name }} &lt;/p&gt;
 &lt;/body&gt;&lt;/html&gt;</code></pre>
           </section>
+          
+          <section>
+            <h2><span style="opacity:0.5">What about</span> Models<span style="opacity:0.5">?</span></h2>
+            <p>models<span style="opacity:0.5">.py</span></p>
+            <pre><code contenteditable>class Person(models.Model):
+    account = models.ForeignKey('django.contrib.auth.models.User')
+    name = models.CharField(max_length=64)
+    cash = models.BigIntegerField()
+</code></pre>
+            <p>views<span style="opacity:0.5">.py</span></p>
+            <pre><code contenteditable>def stuff_handler(request):
+    me = Person.objects.filter(account=request.user)
+    return render(request, 'stuff.html', {'me': me})</code></pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h1><span style="opacity:0.5">Django</span> Middleware</h1>
+            <!-- http://pyevolve.sourceforge.net/wordpress/?p=814 -->
+            <!-- http://djangosnippets.org/snippets/197/ -->
+            <!-- https://github.com/dkukral/everyblock/blob/master/ebpub/ebpub/accounts/middleware.py -->
+          </section>
 
           <section>
+            <a href="https://docs.djangoproject.com/en/dev/topics/http/middleware/"><img src="img/middleware.png" alt="Middleware Illustration"></a>
+            
+          </section>
+        </section>
 
+        <section>
+          <section>
+            <h1><span style="opacity:0.5">Custom</span> Fields</h1>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h1>Management <span style="opacity:0.5">Commands</span></h1>
           </section>
         </section>
 
@@ -265,6 +294,8 @@ pip install -r requirements.txt
           <p style="text-align:left">jython &mdash; <a href="https://docs.djangoproject.com/en/dev/howto/jython/">https://docs.djangoproject.com/en/dev/howto/jython/</a></p>
           <p style="text-align:left">cheat sheet &mdash; <a href="http://www.mercurytide.co.uk/media/whitepapers/django-cheat-sheet/django10-cheat-sheet.pdf">http://www.mercurytide.co.uk/media/whitepapers/django-cheat-sheet/django10-cheat-sheet.pdf</a></p>
           <!-- http://softwaremaniacs.org/blog/2011/01/07/django-micro-framework/en/ -->
+          <!-- http://semanticdjango.org/ -->
+          <!-- https://docs.djangoproject.com/en/1.5/howto/outputting-pdf/ -->
         </section>
 
         <section>
