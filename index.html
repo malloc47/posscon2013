@@ -25,7 +25,7 @@
 	  document.write( '<link rel="stylesheet" href="reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
 	</script>
 
-	<link rel="stylesheet" href="override.css">
+	<link rel="stylesheet" href="posscon2013.css">
 	<!--[if lt IE 9]>
 		<script src="lib/js/html5shiv.js"></script>
 		<![endif]-->
@@ -275,6 +275,117 @@ simplejson==2.6.1</code></pre>
             <a href="https://docs.djangoproject.com/en/dev/topics/http/middleware/"><img src="img/middleware.png" alt="Middleware Illustration"></a>
             
           </section>
+
+          <section>
+            <h2>Default <span style="opacity:0.5">Middleware</span></h2>
+            <pre><code>MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+)</code></pre>
+
+          </section>
+
+          <section>
+            <h2><span style="opacity:0.5">Middleware</span> Hooks</h2>
+            <pre><code>class CommonMiddleware(object):
+    def __init__():
+        # raise django.core.exceptions.MiddlewareNotUsed # to deactivate
+        pass # only called once
+    def process_request(self, request):
+        pass
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        pass
+    def process_template_response(self, request, response):
+        pass
+    def process_response(self, request, response):
+        pass
+    def process_exception(self, request, exception):
+        pass</code></pre>
+          </section>
+
+          <section>
+            <h4><span style="opacity:0.5">django.middleware.common.</span>CommonMiddleware</h4>
+            <pre><code>class CommonMiddleware(object):
+    def process_request(self, request):
+        if 'HTTP_USER_AGENT' in request.META:
+            for user_agent_regex in settings.DISALLOWED_USER_AGENTS: # in settings.py file
+                if user_agent_regex.search(request.META['HTTP_USER_AGENT']):
+                    logger.warning('Forbidden (User agent): %s', request.path,
+                        extra={
+                            'status_code': 403,
+                            'request': request
+                        }
+                    )
+                    return http.HttpResponseForbidden('&lt;h1&gt;Forbidden&lt;/h1&gt;')</code></pre>
+          </section>
+
+          <section>
+            <h4><span style="opacity:0.5">django.middleware.common.</span>BrokenLinkEmailsMiddleware</h4>
+            <pre><code>class BrokenLinkEmailsMiddleware(object):
+    def process_response(self, request, response):
+        if response.status_code == 404 and not settings.DEBUG:
+            # sanity checks go here
+            ua = request.META.get('HTTP_USER_AGENT', '<none>')
+            ip = request.META.get('REMOTE_ADDR', '<none>')
+            mail_managers(
+                "Broken link on %s" % (request.get_host(),),
+                """Referrer: %s
+                    Requested URL: %s
+                    User agent: %s
+                    IP address: %s
+                    """ % (request.META.get('HTTP_REFERER', ''),
+                           request.get_full_path(), ua, ip),
+                fail_silently=True)
+        return response</code></pre>
+          </section>
+
+          <section>
+            <h2><span style="opacity:0.5">Beautiful</span>Soup</h2>
+            <pre><code>from bs4 import BeautifulSoup
+class BeautifulMiddleware(object):
+    def process_response(self, request, response):
+        if response.status_code == 200:
+            if response["content-type"].startswith("text/html"):
+                beauty = BeautifulSoup(response.content)
+                response.content = beauty.prettify()
+        return response</code></pre>
+            <p>Content</p>
+            <pre><code data-fragment-index="1" class="fragment hide">&lt;html&gt;&lt;p&gt;Some data&lt;p&gt;Moar data</code></pre>
+            <pre><code data-fragment-index="1" class="fragment show">Pure text</code></pre>
+            <p>Beautified</p>
+            <pre><code data-fragment-index="2" class="fragment hide">&lt;html&gt;
+ &lt;body&gt;
+  &lt;p&gt; Some data &lt;/p&gt;
+  &lt;p&gt; Moar data &lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <pre><code data-fragment-index="2" class="fragment show">&lt;html&gt;
+ &lt;body&gt;
+  &lt;p&gt;Pure text&lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <p><small><a href="http://pyevolve.sourceforge.net/wordpress/?p=814">http://pyevolve.sourceforge.net/wordpress/?p=814</a></small></p>
+          </section>
+
+          <section>
+            <h2>Markdown<span style="opacity:0.5">?</span>*</h2>
+            <pre><code>from bs4 import BeautifulSoup
+from markdown import markdown
+class MarkdownMiddleware(object):
+    def process_response(self, request, response):
+        if response.status_code == 200:
+            if response["content-type"].startswith("text/markdown"):
+                markdowned = markdown(response.content)
+                beauty = BeautifulSoup(markdowned)
+                response.content = beauty.prettify()
+        return response</code></pre>
+
+            <p><small>*for real applications, use this instead: <a href="https://github.com/svetlyak40wt/django-markdown2">https://github.com/svetlyak40wt/django-markdown2</a></small></p>
+          </section>
+
         </section>
 
         <section>

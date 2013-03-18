@@ -1,0 +1,17 @@
+.reveal .slides section .fragment.hide {
+	opacity: 1;
+    display: block;
+}
+	.reveal .slides section .fragment.hide.visible {
+		opacity: 0;
+        display: none;
+	}
+
+.reveal .slides section .fragment.show {
+	opacity: 0;
+    display: none;
+}
+	.reveal .slides section .fragment.show.visible {
+		opacity: 1;
+        display: block;
+	}
