@@ -195,12 +195,12 @@
             <table style="margin-left:auto;margin-right:auto;">
               <tr><td><span style="font-size: 0.8em;"><code>requirements.txt</code></span></td><td>&mdash;</td><td>machine-readable list of dependencies for your project</td></tr>
             </table>
-            <pre><code contenteditable>Django==1.4.3
+            <pre><code>Django==1.4.3
 South==0.7.6
 scss==0.8.72
 simplejson==2.6.1</code></pre>
 	        <p style="text-align:left">which can be read by <code>pip</code></p>
-            <pre><code contenteditable>pip install -r requirements.txt</code></pre>
+            <pre><code>pip install -r requirements.txt</code></pre>
           </section>
 
           <section>
@@ -231,16 +231,16 @@ simplejson==2.6.1</code></pre>
           <section>
             <p>GET request for /stuff/</p>
             <p>urls<span style="opacity:0.5">.py</span></p>
-            <pre><code contenteditable>urlpatterns = patterns('',
+            <pre><code>urlpatterns = patterns('',
     (r'^stuff/$', views.stuff_handler),
 )</code></pre>
             <br />
             <p>views<span style="opacity:0.5">.py</span></p>
-            <pre><code contenteditable>def stuff_handler(request):
+            <pre><code>def stuff_handler(request):
     return render(request, 'stuff.html', {'name': request.user.username})</code></pre>
             <br />
             <p>stuff<span style="opacity:0.5">.html</span></p>
-            <pre><code contenteditable>&lt;html&gt;
+            <pre><code>&lt;html&gt;
 &lt;head&gt;&lt;title&gt;Page o' Stuff&lt;/title&gt;&lt;/head&gt;
 &lt;body&gt;
 &lt;p&gt; Your name is {{ name }} &lt;/p&gt;
@@ -250,13 +250,13 @@ simplejson==2.6.1</code></pre>
           <section>
             <h2><span style="opacity:0.5">What about</span> Models<span style="opacity:0.5">?</span></h2>
             <p>models<span style="opacity:0.5">.py</span></p>
-            <pre><code contenteditable>class Person(models.Model):
+            <pre><code>class Person(models.Model):
     account = models.ForeignKey('django.contrib.auth.models.User')
     name = models.CharField(max_length=64)
     cash = models.BigIntegerField()
 </code></pre>
             <p>views<span style="opacity:0.5">.py</span></p>
-            <pre><code contenteditable>def stuff_handler(request):
+            <pre><code>def stuff_handler(request):
     me = Person.objects.filter(account=request.user)
     return render(request, 'stuff.html', {'me': me})</code></pre>
           </section>
@@ -394,21 +394,124 @@ class MarkdownMiddleware(object):
           </section>
 
           <section>
-            <h2>Generic <span style="opacity:0.5">Foreign Keys</span></h2>
+            <h2>Why <span style="opacity:0.5">Custom Fields</span>?</h2>
+            <ul>
+              <li>Obscure column types (e.g. geographic data type)</li>
+              <li>Custom column types (e.g. PostgreSQL custom types)</li>
+              <li>Non-builtin Python type to serialize into DB table</li>
+            </ul>
           </section>
+
+          <section>
+            <h2><span style="opacity:0.5">Set</span> Defaults</h2>
+            <h4><span style="opacity:0.5">django_extensions.db.fields.</span>CreationDateTimeField</h4>
+            <pre><code>class CreationDateTimeField(DateTimeField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('editable', False)
+        kwargs.setdefault('blank', True)
+        kwargs.setdefault('default', datetime_now)
+        DateTimeField.__init__(self, *args, **kwargs)
+
+    def get_internal_type(self):
+        return DateTimeField.__name__</code></pre>
+            <p><small><a href="https://github.com/django-extensions/django-extensions/">github.com/django-extensions/django-extensions/</a></small></p>
+          </section>
+
+          <section>
+            <h2><span style="opacity:0.5">Add</span> Attributes</h2>
+            <h4><span style="opacity:0.5">expirefield.fields.</span>ExpireField</h4>
+            <pre><code>class ExpireField(DateTimeField):
+    def __init__(self, verbose_name=None, name=None, **kwargs):
+        # get attribute
+        self.duration = kwargs.pop('duration')
+        # check type
+        if not isinstance(self.duration, timedelta):
+            raise FieldError
+        super(ExpireField, self).__init__(verbose_name, name, **kwargs)
+</code></pre>
+            <p class="fragment">Does... <strong>nothing</strong> (on its own)</p>
+            <p><small><a href="https://github.com/malloc47/expirefield">github.com/malloc47/expirefield</a></small></p>
+          </section>
+
+          <section>
+            <h2><span style="opacity:0.5">Modifying</span> Parent Class</h2>
+            <h4><span style="opacity:0.5">django_extensions.db.fields.</span>UUIDField</h4>
+            <pre><code>class UUIDField(CharField):
+    def __init__(self, verbose_name=None, name=None, **kwargs):
+        kwargs.setdefault('max_length', 36)
+        self.empty_strings_allowed = False
+        kwargs['blank'] = True
+        kwargs.setdefault('editable', False)
+        CharField.__init__(self, verbose_name, name, **kwargs)
+
+    def contribute_to_class(self, cls, name):
+        if self.primary_key:
+            assert not cls._meta.has_auto_field, "More than one AutoField!"
+            super(UUIDField, self).contribute_to_class(cls, name)
+            cls._meta.has_auto_field = True
+            cls._meta.auto_field = self
+        else:
+            super(UUIDField, self).contribute_to_class(cls, name)
+
+    def pre_save(self, model_instance, add):
+        value = super(UUIDField, self).pre_save(model_instance, add)
+        if add:
+            value = force_unicode(uuid.uuid4())
+            setattr(model_instance, self.attname, value)
+        return value
+
+    def get_internal_type(self):
+        return CharField.__name__</code></pre>
+            <p><small><a href="https://github.com/django-extensions/django-extensions/">github.com/django-extensions/django-extensions/</a></small></p>
+          </section>
+
+          <section>
+            <h2><span style="opacity:0.5">Specialized</span> Serialization</h2>
+            <h4>Pickling <span style="opacity:0.5">Objects</span></h4>
+            <pre><code>from pickle import loads, dumps
+
+class PickledObjectField(models.Field):
+    
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('null', True)
+        kwargs.setdefault('editable', False)
+        super(PickledObjectField, self).__init__(*args, **kwargs)
+
+    def to_python(self, value):
+        if value is not None:
+            value = loads(b64decode(value))
+        return value
+
+    def get_db_prep_value(self, value):
+        if value is not None:
+            value = force_unicode(b64encode(dumps(value)))
+        return value
+
+    def get_db_prep_lookup(self, lookup_type, value):
+        if lookup_type not in ['exact', 'in', 'isnull']:
+            raise TypeError('Lookup type %s is not supported.' % lookup_type)
+        return super(PickledObjectField, self).get_db_prep_lookup(lookup_type, value)
+    def value_to_string(self, obj):
+        value = self._get_val_from_obj(obj)
+        return self.get_db_prep_value(value)
+
+    def get_internal_type(self): 
+        return 'TextField'
+
+    __metaclass__ = models.SubfieldBase # to_python will be called </code></pre>
+            <p><small><a href="http://djangosnippets.org/snippets/1694/">http://djangosnippets.org/snippets/1694/</a></small></p>
+          </section>
+
+          <!-- <section> -->
+          <!--   <h2>Generic <span style="opacity:0.5">Foreign Keys</span></h2> -->
+          <!-- </section> -->
         </section>
 
-        <section>
-          <section>
-            <h1><span style="opacity:0.5">Crypographic</span> Signing</h1>
-          </section>
-        </section>
-
-        <section>
-          <section>
-            <h1>Fixtures</h1>
-          </section>
-        </section>
+        <!-- <section> -->
+        <!--   <section> -->
+        <!--     <h1>Fixtures</h1> -->
+        <!--   </section> -->
+        <!-- </section> -->
 
         <section>
           <section>
@@ -417,21 +520,27 @@ class MarkdownMiddleware(object):
         </section>
 
         <section>
-          <h2><span style="opacity:0.5">Fun</span> Django <span style="opacity:0.5">Things</span></h2>
-          <p style="text-align:left">importd &mdash; <a href="http://pythonhosted.org/importd/">http://pythonhosted.org/importd/</a></p>
-          <p style="text-align:left">jython &mdash; <a href="https://docs.djangoproject.com/en/dev/howto/jython/">https://docs.djangoproject.com/en/dev/howto/jython/</a></p>
-          <p style="text-align:left">cheat sheet &mdash; <a href="http://www.mercurytide.co.uk/media/whitepapers/django-cheat-sheet/django10-cheat-sheet.pdf">http://www.mercurytide.co.uk/media/whitepapers/django-cheat-sheet/django10-cheat-sheet.pdf</a></p>
-          <!-- http://softwaremaniacs.org/blog/2011/01/07/django-micro-framework/en/ -->
-          <!-- http://semanticdjango.org/ -->
-          <!-- https://docs.djangoproject.com/en/1.5/howto/outputting-pdf/ -->
-        </section>
+          <section>
+            <h2><span style="opacity:0.5">Fun</span> Django <span style="opacity:0.5">Things</span></h2>
+            <p style="text-align:left">importd &mdash; <a href="http://pythonhosted.org/importd/">http://pythonhosted.org/importd/</a></p>
+            <p style="text-align:left">jython &mdash; <a href="https://docs.djangoproject.com/en/dev/howto/jython/">https://docs.djangoproject.com/en/dev/howto/jython/</a></p>
+            <p style="text-align:left">cheat sheet &mdash; <a href="http://www.mercurytide.co.uk/media/whitepapers/django-cheat-sheet/django10-cheat-sheet.pdf">http://www.mercurytide.co.uk/media/whitepapers/django-cheat-sheet/django10-cheat-sheet.pdf</a></p>
+            <!-- http://softwaremaniacs.org/blog/2011/01/07/django-micro-framework/en/ -->
+            <!-- http://semanticdjango.org/ -->
+            <!-- https://docs.djangoproject.com/en/1.5/howto/outputting-pdf/ -->
+          </section>
 
-        <section>
-          <pre><code contenteditable>from importd import d # the d is for Django
+          <section>
+            <pre><code>from importd import d # the d is for Django
 
 @d("/")
 def index(request):
     return d.HttpResponse("hello world")</code></pre>
+          </section>
+        </section>
+
+        <section>
+          <h1>Questions<span style="opacity:0.5">?</span></h1>
         </section>
 
 	  </div>
