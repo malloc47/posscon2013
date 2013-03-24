@@ -343,7 +343,7 @@ simplejson==2.6.1</code></pre>
           </section>
 
           <section>
-            <h2><span style="opacity:0.5">Beautiful</span>Soup</h2>
+            <h2><span style="opacity:0.5">Beautiful</span> Soup</h2>
             <pre><code>from bs4 import BeautifulSoup
 class BeautifulMiddleware(object):
     def process_response(self, request, response):
@@ -352,21 +352,28 @@ class BeautifulMiddleware(object):
                 beauty = BeautifulSoup(response.content)
                 response.content = beauty.prettify()
         return response</code></pre>
-            <p>Content</p>
-            <pre><code data-fragment-index="1" class="fragment hide">&lt;html&gt;&lt;p&gt;Some data&lt;p&gt;Moar data</code></pre>
-            <pre><code data-fragment-index="1" class="fragment show">Pure text</code></pre>
-            <p>Beautified</p>
-            <pre><code data-fragment-index="2" class="fragment hide">&lt;html&gt;
+            <div data-fragment-index="1" class="fragment hide">
+              <p>Content</p>
+              <pre><code>&lt;html&gt;&lt;p&gt;Some data&lt;p&gt;Moar data</code></pre>
+              <p>Beautified</p>
+              <pre><code>&lt;html&gt;
  &lt;body&gt;
   &lt;p&gt; Some data &lt;/p&gt;
   &lt;p&gt; Moar data &lt;/p&gt;
  &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-            <pre><code data-fragment-index="2" class="fragment show">&lt;html&gt;
+            </div>
+            <div data-fragment-index="2" class="fragment show">
+              <p>Content</p>
+              <pre><code>Pure text</code></pre>
+              <p>Beautified</p>
+              <pre><code>&lt;html&gt;
  &lt;body&gt;
   &lt;p&gt;Pure text&lt;/p&gt;
  &lt;/body&gt;
 &lt;/html&gt;</code></pre>
+            </div>
+
             <p><small><a href="http://pyevolve.sourceforge.net/wordpress/?p=814">http://pyevolve.sourceforge.net/wordpress/?p=814</a></small></p>
           </section>
 
@@ -403,7 +410,7 @@ class MarkdownMiddleware(object):
           </section>
 
           <section>
-            <h2><span style="opacity:0.5">Set</span> Defaults</h2>
+            <h2><span style="opacity:0.5">Set</span> Default Attributes</h2>
             <h4><span style="opacity:0.5">django_extensions.db.fields.</span>CreationDateTimeField</h4>
             <pre><code>class CreationDateTimeField(DateTimeField):
     def __init__(self, *args, **kwargs):
@@ -418,7 +425,7 @@ class MarkdownMiddleware(object):
           </section>
 
           <section>
-            <h2><span style="opacity:0.5">Add</span> Attributes</h2>
+            <h2><span style="opacity:0.5">Add</span> New Attributes</h2>
             <h4><span style="opacity:0.5">expirefield.fields.</span>ExpireField</h4>
             <pre><code>class ExpireField(DateTimeField):
     def __init__(self, verbose_name=None, name=None, **kwargs):
@@ -429,7 +436,7 @@ class MarkdownMiddleware(object):
             raise FieldError
         super(ExpireField, self).__init__(verbose_name, name, **kwargs)
 </code></pre>
-            <p class="fragment">Does... <strong>nothing</strong> (on its own)</p>
+            <p>This snippet does nothing... <a href="#/7/4">yet</a></p>
             <p><small><a href="https://github.com/malloc47/expirefield">github.com/malloc47/expirefield</a></small></p>
           </section>
 
@@ -468,9 +475,7 @@ class MarkdownMiddleware(object):
           <section>
             <h2><span style="opacity:0.5">Specialized</span> Serialization</h2>
             <h4>Pickling <span style="opacity:0.5">Objects</span></h4>
-            <pre><code>from pickle import loads, dumps
-
-class PickledObjectField(models.Field):
+            <pre><code>class PickledObjectField(models.Field):
     
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('null', True)
@@ -479,12 +484,12 @@ class PickledObjectField(models.Field):
 
     def to_python(self, value):
         if value is not None:
-            value = loads(b64decode(value))
+            value = pickle.loads(b64decode(value))
         return value
 
     def get_db_prep_value(self, value):
         if value is not None:
-            value = force_unicode(b64encode(dumps(value)))
+            value = force_unicode(b64encode(pickle.dumps(value)))
         return value
 
     def get_db_prep_lookup(self, lookup_type, value):
@@ -517,6 +522,93 @@ class PickledObjectField(models.Field):
           <section>
             <h1>Management <span style="opacity:0.5">Commands</span></h1>
           </section>
+
+          <section>
+            <h3><code>manage.py <span style="opacity:0.5">&rArr;</span> django-admin.py</code></h3>
+            <pre><code>./manage startproject
+./manage startapp      # scaffolding?
+./manage syncdb        # no in-built migrations
+./manage shell
+./manage runserver localhost:8000
+./manage changepassword</code></pre>
+          </section>
+
+          <section>
+            <h2>Why <span style="opacity:0.5">Management Commands</span>?</h2>
+            <ul>
+              <li>Create/Process data (fixtures might be better)</li>
+              <li>Override default command behavior</li>
+              <li>Expose functions to run as <code>cron</code> jobs</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>File <span style="opacity:0.5">Location</span></h2>
+            <!-- <p>Placed here, Django will automatically recognize new -->
+            <!-- commands:</p> -->
+            <pre style="width:50%"><code>appname/management/commands/command_name.py</pre></code>
+            
+          </section>
+
+          <section>
+            <h2><span style="opacity:0.5">Model</span> Introspection</h2>
+            <h4><span style="opacity:0.5">expirefield.commands.management.</span>expire</h4>
+            <p>Remember <a href="#/6/3">ExpireField</a></p>
+            <pre><code>class Command(BaseCommand):
+    def handle(self, *args, **options):
+        # get all models that have an ExpireField
+        models = [m for m in django.db.models.get_models() 
+             if any( type(f) is ExpireField for f in m._meta.fields)]
+        for model in models:
+            field = next(f for f in model._meta.fields 
+                        if type(f) is ExpireField )
+            filter_args = {'{0}__{1}'.format(field.name, 'lt'): 
+                           (datetime.now() - field.duration),}
+            # delete all the old objects
+            q = model.objects.filter(**filter_args)
+            q.delete()</pre></code>
+
+            <pre><code>./manage expire</code></pre>
+
+            <p><small><a href="https://github.com/malloc47/expirefield">github.com/malloc47/expirefield</a></small></p>
+          </section>
+
+          <section>
+            <h2><code>optparse</code> <span style="opacity:0.5">Arguments</span></h2>
+            <pre><code>class Command(BaseRunserverCommand):
+    option_list = BaseRunserverCommand.option_list + (
+        make_option('--sass',
+            action='store_true',
+            dest='sass',
+            default=False,
+            help='process all sass files in project'),
+        )
+
+    def inner_run(self, *args, **options):
+        if options['sass']:
+            print('Processing SASS files...')
+            files = find_scss('assets/')
+            for f in files:
+                print('==> Converting ' + f)
+                with open(os.path.splitext(f)[0] + '.css', 'w') as h:
+                    h.write(parser.load(f))
+
+        # continue with the runserver command
+        super(Command, self).inner_run(*args, **options)
+
+def find_scss(top):
+    return reduce(
+        list.__add__,
+        [[os.path.join(root, f)
+          for f in files
+          if f.endswith('.scss') or f.endswith('.sass')]
+         for root, dirs, files
+         in os.walk(top)],
+        []) </code></pre>
+
+            <pre><code>./manage runserver --sass</code></pre>
+          </section>
+
         </section>
 
         <section>
@@ -524,7 +616,8 @@ class PickledObjectField(models.Field):
             <h2><span style="opacity:0.5">Fun</span> Django <span style="opacity:0.5">Things</span></h2>
             <p style="text-align:left">importd &mdash; <a href="http://pythonhosted.org/importd/">http://pythonhosted.org/importd/</a></p>
             <p style="text-align:left">jython &mdash; <a href="https://docs.djangoproject.com/en/dev/howto/jython/">https://docs.djangoproject.com/en/dev/howto/jython/</a></p>
-            <p style="text-align:left">cheat sheet &mdash; <a href="http://www.mercurytide.co.uk/media/whitepapers/django-cheat-sheet/django10-cheat-sheet.pdf">http://www.mercurytide.co.uk/media/whitepapers/django-cheat-sheet/django10-cheat-sheet.pdf</a></p>
+            <p style="text-align:left; font-size:0.8em;">cheat sheet &mdash; <a href="http://media.revsys.com/images/django-1.4-cheatsheet.pdf">http://media.revsys.com/images/django-1.4-cheatsheet.pdfs</a></p>
+            <p style="text-align:left; font-size:0.8em;">debug toolbar &mdash; <a href="https://github.com/django-debug-toolbar/django-debug-toolbar">https://github.com/django-debug-toolbar/django-debug-toolbar</a>
             <!-- http://softwaremaniacs.org/blog/2011/01/07/django-micro-framework/en/ -->
             <!-- http://semanticdjango.org/ -->
             <!-- https://docs.djangoproject.com/en/1.5/howto/outputting-pdf/ -->
