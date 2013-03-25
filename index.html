@@ -77,19 +77,20 @@
 		  <section>
             <h2><span style="opacity:0.5">Who uses</span>
             Django<span style="opacity:0.5">?</span></h2>
-            <ul>
-              <li>Instagram</li>
-              <li>Pinterest</li>
-              <li>Disqus</li>
-              <li>bitbucket</li>
-              <li>lanyrd</li>
-              <li>rdio</li>
-              <li>mozilla.com</li>
-              <li>Mahalo</li>
-              <li>New York Times</li>
-              <li>Washington Post</li>
-              <li>The Guardian</li>
-            </ul>
+            <img src="img/montage.png" alt="Major Django users">
+            <!-- <ul> -->
+            <!--   <li>Instagram</li> -->
+            <!--   <li>Pinterest</li> -->
+            <!--   <li>Disqus</li> -->
+            <!--   <li>bitbucket</li> -->
+            <!--   <li>lanyrd</li> -->
+            <!--   <li>rdio</li> -->
+            <!--   <li>mozilla.com</li> -->
+            <!--   <li>Mahalo</li> -->
+            <!--   <li>New York Times</li> -->
+            <!--   <li>Washington Post</li> -->
+            <!--   <li>The Guardian</li> -->
+            <!-- </ul> -->
 		  </section>
 
 		  <section>
@@ -98,18 +99,18 @@
             <ul style="width:50%">
               <li>Python <span style="opacity:0.5">vs.</span> Ruby
                 <ul>
-                  <li style="opacity:0.6">SciPy/Numpy</li>
-                  <li style="opacity:0.6">Linux ubiquity</li>
+                  <li style="opacity:0.5">SciPy/NumPy</li>
+                  <li style="opacity:0.5">Linux ubiquity</li>
                 </ul>
               </li>
               <li>MTV <span style="opacity:0.5">vs.</span> MVC</li>
               <li>DIY <span style="opacity:0.5">vs.</span> Scaffolding</li>
-              <li>Bundled (<code>django.contrib.*</code>)
+              <li>Bundled <span style="opacity:0.5">(<code>django.contrib.*</code>)</span>
                 <ul>
                   <li>Admin</li>
                   <li>Authentication</li>
-                  <li>Geospatial (GeoDjango)</li>
-                  <li>Form handling (previews, wizards, validation, etc.)</li>
+                  <li>Geospatial <span style="opacity:0.5">(GeoDjango)</span></li>
+                  <li>Form handling <span style="opacity:0.5">(previews, wizards, validation, etc.)</span></li>
                 </ul>
               </li>
               <li>Optimized for content-heavy CRUD apps</li>
@@ -175,7 +176,7 @@
           </section>
 
           <section>
-            <h2><span style="opacity:0.5;">Handling</span> Dependencies</h2>
+            <h2><span style="opacity:0.5;">Installing</span> Requirements</h2>
             <p>the <em>non-root</em> way</p>
             <br />
             <table style="margin-left:auto;margin-right:auto;">
@@ -223,7 +224,7 @@ simplejson==2.6.1</code></pre>
 
           <section>
             <h2>Request <span style="opacity:0.5">Handling</span></h2>
-            <p>Request &rarr; urls.py &rarr; views.py &lt;function&gt;
+            <p>Request &rarr; urls.py &rarr; views.py function
             &rarr; &lt;template&gt;.html
                </p>
           </section>
@@ -311,8 +312,8 @@ simplejson==2.6.1</code></pre>
             <pre><code>class CommonMiddleware(object):
     def process_request(self, request):
         if 'HTTP_USER_AGENT' in request.META:
-            for user_agent_regex in settings.DISALLOWED_USER_AGENTS: # in settings.py file
-                if user_agent_regex.search(request.META['HTTP_USER_AGENT']):
+            for user_agent in settings.DISALLOWED_USER_AGENTS: # in settings.py file
+                if user_agent.search(request.META['HTTP_USER_AGENT']):
                     logger.warning('Forbidden (User agent): %s', request.path,
                         extra={
                             'status_code': 403,
@@ -377,21 +378,21 @@ class BeautifulMiddleware(object):
             <p><small><a href="http://pyevolve.sourceforge.net/wordpress/?p=814">http://pyevolve.sourceforge.net/wordpress/?p=814</a></small></p>
           </section>
 
-          <section>
-            <h2>Markdown<span style="opacity:0.5">?</span>*</h2>
-            <pre><code>from bs4 import BeautifulSoup
-from markdown import markdown
-class MarkdownMiddleware(object):
-    def process_response(self, request, response):
-        if response.status_code == 200:
-            if response["content-type"].startswith("text/markdown"):
-                markdowned = markdown(response.content)
-                beauty = BeautifulSoup(markdowned)
-                response.content = beauty.prettify()
-        return response</code></pre>
+<!--           <section> -->
+<!--             <h2>Markdown<span style="opacity:0.5">?</span>*</h2> -->
+<!--             <pre><code>from bs4 import BeautifulSoup -->
+<!-- from markdown import markdown -->
+<!-- class MarkdownMiddleware(object): -->
+<!--     def process_response(self, request, response): -->
+<!--         if response.status_code == 200: -->
+<!--             if response["content-type"].startswith("text/markdown"): -->
+<!--                 markdowned = markdown(response.content) -->
+<!--                 beauty = BeautifulSoup(markdowned) -->
+<!--                 response.content = beauty.prettify() -->
+<!--         return response</code></pre> -->
 
-            <p><small>*for real applications, use this instead: <a href="https://github.com/svetlyak40wt/django-markdown2">https://github.com/svetlyak40wt/django-markdown2</a></small></p>
-          </section>
+<!--             <p><small>*for real applications, use this instead: <a href="https://github.com/svetlyak40wt/django-markdown2">https://github.com/svetlyak40wt/django-markdown2</a></small></p> -->
+<!--           </section> -->
 
         </section>
 
@@ -421,6 +422,7 @@ class MarkdownMiddleware(object):
 
     def get_internal_type(self):
         return DateTimeField.__name__</code></pre>
+            <!-- TODO: comparison of use -->
             <p><small><a href="https://github.com/django-extensions/django-extensions/">github.com/django-extensions/django-extensions/</a></small></p>
           </section>
 
@@ -437,11 +439,12 @@ class MarkdownMiddleware(object):
         super(ExpireField, self).__init__(verbose_name, name, **kwargs)
 </code></pre>
             <p>This snippet does nothing... <a href="#/7/4">yet</a></p>
+            <!-- TODO: comparison of use -->
             <p><small><a href="https://github.com/malloc47/expirefield">github.com/malloc47/expirefield</a></small></p>
           </section>
 
           <section>
-            <h2><span style="opacity:0.5">Modifying</span> Parent Class</h2>
+            <h2><span style="opacity:0.5">Modifying</span> Parent Model</h2>
             <h4><span style="opacity:0.5">django_extensions.db.fields.</span>UUIDField</h4>
             <pre><code>class UUIDField(CharField):
     def __init__(self, verbose_name=None, name=None, **kwargs):
@@ -531,6 +534,9 @@ class MarkdownMiddleware(object):
 ./manage shell
 ./manage runserver localhost:8000
 ./manage changepassword</code></pre>
+
+            <p>New commands:</p>
+            <pre style="width:50%"><code>appname/management/commands/command_name.py</pre></code>
           </section>
 
           <section>
@@ -540,14 +546,6 @@ class MarkdownMiddleware(object):
               <li>Override default command behavior</li>
               <li>Expose functions to run as <code>cron</code> jobs</li>
             </ul>
-          </section>
-
-          <section>
-            <h2>File <span style="opacity:0.5">Location</span></h2>
-            <!-- <p>Placed here, Django will automatically recognize new -->
-            <!-- commands:</p> -->
-            <pre style="width:50%"><code>appname/management/commands/command_name.py</pre></code>
-            
           </section>
 
           <section>
@@ -621,16 +619,27 @@ def find_scss(top):
             <!-- http://softwaremaniacs.org/blog/2011/01/07/django-micro-framework/en/ -->
             <!-- http://semanticdjango.org/ -->
             <!-- https://docs.djangoproject.com/en/1.5/howto/outputting-pdf/ -->
-          </section>
 
+          </section>
           <section>
+            <h2><span style="opacity:0.5">import</span>d</h2>
             <pre><code>from importd import d # the d is for Django
 
 @d("/")
 def index(request):
     return d.HttpResponse("hello world")</code></pre>
+
+            <br />
+            <br />
+
+            <h2>j<span style="opacity:0.5">ython</span></h2>
+
+            <pre><code>jython manage.py war</code></pre>
+
           </section>
         </section>
+
+
 
         <section>
           <h1>Questions<span style="opacity:0.5">?</span></h1>
