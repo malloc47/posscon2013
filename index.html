@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-
+  <!-- todo: fonts larger -->
   <head>
 	<meta charset="utf-8">
 
@@ -99,14 +99,14 @@
             <h2>Django <span style="opacity:0.5">compared with</span>
               Rails</h2>
             <ul style="width:50%">
-              <li>Python <span style="opacity:0.5">vs.</span> Ruby
+              <li>Python <span style="opacity:0.5">vs.</span> Ruby <!-- don't confuse ruby/rails -->
                 <ul>
-                  <li style="opacity:0.5">SciPy/NumPy</li>
+                  <li style="opacity:0.5">SciPy/NumPy</li> <!-- use cases: machine learning, statistics, image processing, etc. -->
                   <li style="opacity:0.5">Linux ubiquity</li>
                 </ul>
               </li>
               <li>MTV <span style="opacity:0.5">vs.</span> MVC</li>
-              <li>DIY <span style="opacity:0.5">vs.</span> Scaffolding</li>
+              <li>DIY <span style="opacity:0.5">vs.</span> Generators</li>
               <li>Bundled <span style="opacity:0.5">(<code>django.contrib.*</code>)</span>
                 <ul>
                   <li>Admin</li>
@@ -139,6 +139,8 @@
           <section>
             <h1>A <span style="opacity:0.5;">Django</span> Project</h1>
           </section>
+
+          <!-- todo: app vs project -->
 
           <section>
             <h2>Django <span style="opacity:0.5">Files</span></h2>
@@ -186,7 +188,7 @@
               local copies of Python, independent of the system
               (forked as <code><a href="https://github.com/saghul/pythonz">pythonz</a></code>)</td></tr>
               <tr><td><code><a href="http://www.virtualenv.org">virtualenv</a></code></td><td>&mdash;</td><td>local
-              environment for installing python packages</td></tr>
+              environment for installing python packages</td></tr> <!-- todo: RVM rbenv -->
               <tr><td><code><a href="http://www.pip-installer.org/">pip</a></code></td><td>&mdash;</td><td>Python package manager</td></tr>
               <tr><td></td><td></td><td><code>pip install
               django</code></td></tr>
@@ -440,7 +442,7 @@ class BeautifulMiddleware(object):
             raise FieldError
         super(ExpireField, self).__init__(verbose_name, name, **kwargs)
 </code></pre>
-            <p>This snippet does nothing... <a href="#/7/4">yet</a></p>
+            <p>This snippet does nothing... <a href="#/7/3">yet</a></p>
             <!-- TODO: comparison of use -->
             <p><small><a href="https://github.com/malloc47/expirefield">github.com/malloc47/expirefield</a></small></p>
           </section>
@@ -530,12 +532,12 @@ class BeautifulMiddleware(object):
 
           <section>
             <h3><code>manage.py <span style="opacity:0.5">&rArr;</span> django-admin.py</code></h3>
-            <pre><code>./manage startproject
-./manage startapp      # scaffolding?
+            <pre><code>./manage startapp      # scaffolding?
 ./manage syncdb        # no in-built migrations
 ./manage shell
 ./manage runserver localhost:8000
-./manage changepassword</code></pre>
+./manage changepassword
+./manage help</code></pre>
 
             <p>New commands:</p>
             <pre style="width:50%"><code>appname/management/commands/command_name.py</pre></code>
@@ -624,6 +626,7 @@ def find_scss(top):
 
           </section>
           <section>
+            <!-- todo: split up slide -->
             <h2><span style="opacity:0.5">import</span>d</h2>
             <pre><code>from importd import d # the d is for Django
 
@@ -709,8 +712,6 @@ def index(request):
           document.querySelector( '.share-reveal' ).style.display = 'block';
 	  }
 	</script>
-
-
 
   </body>
 </html>
