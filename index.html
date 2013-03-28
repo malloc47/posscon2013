@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-  <!-- todo: fonts larger -->
   <head>
 	<meta charset="utf-8">
 
@@ -15,7 +14,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 	<link rel="stylesheet" href="reveal.js/css/reveal.min.css">
-	<link rel="stylesheet" href="reveal.js/css/theme/night.css" id="theme">
+	<link rel="stylesheet" href="css/night.css" id="theme">
 
 	<!-- For syntax highlighting -->
 	<link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
@@ -48,10 +47,17 @@
 		</section>
 
 		<section>
-		  <h1><span style="opacity:0.5">About</span> Me</h1>
-          <p><em>Ph.D. candidate</em>
-            in the Department of Computer Science and Engineering at
-            the Univeristy of South Carolina</p>
+		  <section>
+		    <h1><span style="opacity:0.5">About</span> Me</h1>
+            <p>Ph.D. candidate in the Department of Computer Science and
+              Engineering at the Univeristy of South Carolina</p>
+		  </section>
+
+          <section>
+            <h1><span style="opacity:0.5">I do</span> <span style="font-family:Open Sans;">A.I.</span></h1>
+            <br />
+            <p class="fragment face"><a href="https://github.com/malloc47">https://github.com/malloc47</a></p>
+          </section>
 		</section>
 
 		<section>
@@ -101,8 +107,8 @@
             <ul style="width:50%">
               <li>Python <span style="opacity:0.5">vs.</span> Ruby <!-- don't confuse ruby/rails -->
                 <ul>
-                  <li style="opacity:0.5">SciPy/NumPy</li> <!-- use cases: machine learning, statistics, image processing, etc. -->
-                  <li style="opacity:0.5">Linux ubiquity</li>
+                  <li>SciPy/NumPy - Science!</li> <!-- use cases: machine learning, statistics, image processing, etc. -->
+                  <li>Linux ubiquity</li>
                 </ul>
               </li>
               <li>MTV <span style="opacity:0.5">vs.</span> MVC</li>
@@ -140,7 +146,17 @@
             <h1>A <span style="opacity:0.5;">Django</span> Project</h1>
           </section>
 
-          <!-- todo: app vs project -->
+          <section>
+            <h2>Project <span style="opacity:0.5">vs.</span> Apps</h2>
+            <ul><li>project/
+                <ul>
+                  <li>project/</li>
+                  <li>app1/</li>
+                  <li>app2/</li>
+                  <li>app3/</li>
+                  <li>...</li>
+            </ul></li></ul>
+          </section>
 
           <section>
             <h2>Django <span style="opacity:0.5">Files</span></h2>
@@ -171,7 +187,7 @@
             <p style="text-align:left">Recommended</p>
             <ul>
               <li style="font-family:monospace;">myproj/templates/myapp/*.html</li>
-              <li style="font-family:monospace;">myproj/static/*.html</li>
+              <li style="font-family:monospace;">myproj/static/*.{css,js}</li>
             </ul>
           </section>
 
@@ -188,11 +204,10 @@
               local copies of Python, independent of the system
               (forked as <code><a href="https://github.com/saghul/pythonz">pythonz</a></code>)</td></tr>
               <tr><td><code><a href="http://www.virtualenv.org">virtualenv</a></code></td><td>&mdash;</td><td>local
-              environment for installing python packages</td></tr> <!-- todo: RVM rbenv -->
+              environment for installing python packages</td></tr> <!-- note: RVM rbenv -->
               <tr><td><code><a href="http://www.pip-installer.org/">pip</a></code></td><td>&mdash;</td><td>Python package manager</td></tr>
               <tr><td></td><td></td><td><code>pip install
               django</code></td></tr>
-              <!-- <tr><td><span style="font-size: 0.8em;"><code>requirements.txt</code></span></td><td>&mdash;</td><td>machine-readable list of dependencies for your project</td></tr> -->
             </table>
           </section>
 
@@ -242,7 +257,8 @@ simplejson==2.6.1</code></pre>
             <br />
             <p>views<span style="opacity:0.5">.py</span></p>
             <pre><code>def stuff_handler(request):
-    return render(request, 'stuff.html', {'name': request.user.username})</code></pre>
+    return render(request, 'stuff.html', 
+                  {'name': request.user.username})</code></pre>
             <br />
             <p>stuff<span style="opacity:0.5">.html</span></p>
             <pre><code>&lt;html&gt;
@@ -277,11 +293,6 @@ simplejson==2.6.1</code></pre>
           </section>
 
           <section>
-            <a href="https://docs.djangoproject.com/en/dev/topics/http/middleware/"><img src="img/middleware.png" alt="Middleware Illustration"></a>
-            
-          </section>
-
-          <section>
             <h2>Default <span style="opacity:0.5">Middleware</span></h2>
             <pre><code>MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -290,18 +301,21 @@ simplejson==2.6.1</code></pre>
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )</code></pre>
+          </section>
 
+          <section>
+            <a href="https://docs.djangoproject.com/en/dev/topics/http/middleware/"><img src="img/middleware.png" alt="Middleware Illustration"></a>
+            
           </section>
 
           <section>
             <h2><span style="opacity:0.5">Middleware</span> Hooks</h2>
             <pre><code>class CommonMiddleware(object):
     def __init__():
-        # raise django.core.exceptions.MiddlewareNotUsed # to deactivate
         pass # only called once
     def process_request(self, request):
         pass
-    def process_view(self, request, view_func, view_args, view_kwargs):
+    def process_view(self,request,view_func,view_args,view_kwargs):
         pass
     def process_template_response(self, request, response):
         pass
@@ -316,15 +330,15 @@ simplejson==2.6.1</code></pre>
             <pre><code>class CommonMiddleware(object):
     def process_request(self, request):
         if 'HTTP_USER_AGENT' in request.META:
-            for user_agent in settings.DISALLOWED_USER_AGENTS: # in settings.py file
-                if user_agent.search(request.META['HTTP_USER_AGENT']):
-                    logger.warning('Forbidden (User agent): %s', request.path,
+            for ua in settings.DISALLOWED_USER_AGENTS:
+                if ua.search(request.META['HTTP_USER_AGENT']):
+                    logger.warning('Forbidden: %s', request.path,
                         extra={
                             'status_code': 403,
                             'request': request
                         }
                     )
-                    return http.HttpResponseForbidden('&lt;h1&gt;Forbidden&lt;/h1&gt;')</code></pre>
+                    return http.HttpResponseForbidden('Forbidden')</code></pre>
           </section>
 
           <section>
@@ -421,17 +435,21 @@ class BeautifulMiddleware(object):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('editable', False)
         kwargs.setdefault('blank', True)
-        kwargs.setdefault('default', datetime_now)
-        DateTimeField.__init__(self, *args, **kwargs)
-
-    def get_internal_type(self):
-        return DateTimeField.__name__</code></pre>
-            <!-- TODO: comparison of use -->
+        kwargs.setdefault('default', datetime.now)
+        DateTimeField.__init__(self, *args, **kwargs)</code></pre>
+            <p>instead of</p>
+            <pre><code>class Person(models.Model):
+    create = DateTimeField(editable=False, 
+                           blank=True, 
+                           default=datetime.now)</code></pre>
+            <p>we get</p>
+            <pre><code>class Person(models.Model):
+    create = CreationDateTimeField()</code></pre>
             <p><small><a href="https://github.com/django-extensions/django-extensions/">github.com/django-extensions/django-extensions/</a></small></p>
           </section>
 
           <section>
-            <h2><span style="opacity:0.5">Add</span> New Attributes</h2>
+            <h2><span style="opacity:0.5">Add</span> New Model Attributes</h2>
             <h4><span style="opacity:0.5">expirefield.fields.</span>ExpireField</h4>
             <pre><code>class ExpireField(DateTimeField):
     def __init__(self, verbose_name=None, name=None, **kwargs):
@@ -440,10 +458,14 @@ class BeautifulMiddleware(object):
         # check type
         if not isinstance(self.duration, timedelta):
             raise FieldError
-        super(ExpireField, self).__init__(verbose_name, name, **kwargs)
-</code></pre>
+        super(ExpireField, self).__init__(verbose_name, 
+                                          name, 
+                                          **kwargs)</code></pre>
+            <p>allows</p>
+            <pre><code>class Person(models.Model):
+    expire_time = ExpireField( duration=timedelta(hours=2) )</code></pre>
+
             <p>This snippet does nothing... <a href="#/7/3">yet</a></p>
-            <!-- TODO: comparison of use -->
             <p><small><a href="https://github.com/malloc47/expirefield">github.com/malloc47/expirefield</a></small></p>
           </section>
 
@@ -460,7 +482,7 @@ class BeautifulMiddleware(object):
 
     def contribute_to_class(self, cls, name):
         if self.primary_key:
-            assert not cls._meta.has_auto_field, "More than one AutoField!"
+            assert not cls._meta.has_auto_field, "More than one PK"
             super(UUIDField, self).contribute_to_class(cls, name)
             cls._meta.has_auto_field = True
             cls._meta.auto_field = self
@@ -468,7 +490,7 @@ class BeautifulMiddleware(object):
             super(UUIDField, self).contribute_to_class(cls, name)
 
     def pre_save(self, model_instance, add):
-        value = super(UUIDField, self).pre_save(model_instance, add)
+        value = super(UUIDField, self).pre_save(model_instance,add)
         if add:
             value = force_unicode(uuid.uuid4())
             setattr(model_instance, self.attname, value)
@@ -513,17 +535,7 @@ class BeautifulMiddleware(object):
     __metaclass__ = models.SubfieldBase # to_python will be called </code></pre>
             <p><small><a href="http://djangosnippets.org/snippets/1694/">http://djangosnippets.org/snippets/1694/</a></small></p>
           </section>
-
-          <!-- <section> -->
-          <!--   <h2>Generic <span style="opacity:0.5">Foreign Keys</span></h2> -->
-          <!-- </section> -->
         </section>
-
-        <!-- <section> -->
-        <!--   <section> -->
-        <!--     <h1>Fixtures</h1> -->
-        <!--   </section> -->
-        <!-- </section> -->
 
         <section>
           <section>
@@ -532,15 +544,15 @@ class BeautifulMiddleware(object):
 
           <section>
             <h3><code>manage.py <span style="opacity:0.5">&rArr;</span> django-admin.py</code></h3>
-            <pre><code>./manage startapp      # scaffolding?
-./manage syncdb        # no in-built migrations
+            <pre><code>./manage startapp
+./manage syncdb
 ./manage shell
 ./manage runserver localhost:8000
 ./manage changepassword
 ./manage help</code></pre>
 
             <p>New commands:</p>
-            <pre style="width:50%"><code>appname/management/commands/command_name.py</pre></code>
+            <pre style="width:60%"><code>appname/management/commands/command_name.py</pre></code>
           </section>
 
           <section>
@@ -560,7 +572,7 @@ class BeautifulMiddleware(object):
     def handle(self, *args, **options):
         # get all models that have an ExpireField
         models = [m for m in django.db.models.get_models() 
-             if any( type(f) is ExpireField for f in m._meta.fields)]
+             if any(type(f) is ExpireField for f in m._meta.fields)]
         for model in models:
             field = next(f for f in model._meta.fields 
                         if type(f) is ExpireField )
@@ -617,7 +629,14 @@ def find_scss(top):
           <section>
             <h2><span style="opacity:0.5">Fun</span> Django <span style="opacity:0.5">Things</span></h2>
             <p style="text-align:left">importd &mdash; <a href="http://pythonhosted.org/importd/">http://pythonhosted.org/importd/</a></p>
-            <p style="text-align:left">jython &mdash; <a href="https://docs.djangoproject.com/en/dev/howto/jython/">https://docs.djangoproject.com/en/dev/howto/jython/</a></p>
+            <pre><code>from importd import d # the d is for Django
+
+@d("/")
+def index(request):
+    return d.HttpResponse("hello world")</code></pre>
+            <p style="text-align:left">jython &mdash; <a href="https://code.google.com/p/django-jython/">https://code.google.com/p/django-jython/</a></p>
+            <pre><code>jython manage.py war</code></pre>
+            
             <p style="text-align:left; font-size:0.8em;">cheat sheet &mdash; <a href="http://media.revsys.com/images/django-1.4-cheatsheet.pdf">http://media.revsys.com/images/django-1.4-cheatsheet.pdfs</a></p>
             <p style="text-align:left; font-size:0.8em;">debug toolbar &mdash; <a href="https://github.com/django-debug-toolbar/django-debug-toolbar">https://github.com/django-debug-toolbar/django-debug-toolbar</a>
             <!-- http://softwaremaniacs.org/blog/2011/01/07/django-micro-framework/en/ -->
@@ -625,26 +644,7 @@ def find_scss(top):
             <!-- https://docs.djangoproject.com/en/1.5/howto/outputting-pdf/ -->
 
           </section>
-          <section>
-            <!-- todo: split up slide -->
-            <h2><span style="opacity:0.5">import</span>d</h2>
-            <pre><code>from importd import d # the d is for Django
-
-@d("/")
-def index(request):
-    return d.HttpResponse("hello world")</code></pre>
-
-            <br />
-            <br />
-
-            <h2>j<span style="opacity:0.5">ython</span></h2>
-
-            <pre><code>jython manage.py war</code></pre>
-
-          </section>
         </section>
-
-
 
         <section>
           <h1>Questions<span style="opacity:0.5">?</span></h1>
@@ -684,21 +684,12 @@ def index(request):
 
 	</script>
 
-    <!-- <div class="share-reveal" style="display: none; position: absolute; bottom: 10px; left: 50%; margin-left: -205px; z-index: 20;"> -->
-	<!--   <a href="http://twitter.com/share" class="twitter-share-button" data-text="reveal.js - an HTML presentation framework from @hakimel." data-url="http://lab.hakim.se/reveal-js" data-count="small" data-related="hakimel"></a> -->
-
-	<!--   <iframe id="facebook-button" src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fapp.hakim.se%2Freveal-js%2F&layout=button_count&show_faces=false&width=93&action=like&font=arial&colorscheme=light&height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:85px; height:24px; position: relative; top: 4px;" allowTransparency="true"></iframe> -->
-
-	<!--   <a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://lab.hakim.se/reveal-js"></a> -->
-
-	<!--   <a href="https://twitter.com/rvlio" class="twitter-follow-button" data-show-count="false" data-dnt="true">Follow @rvlio</a> -->
-	<!-- </div> -->
-
-
     <div class="share-reveal" style="display: none; position: absolute; bottom: 10px; left: 50%; margin-left: -180px; z-index: 20;">
 
       <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.malloc47.com/posscon2013/" data-text="Extending Django" data-via="malloc47">Tweet</a>
-	  <a href="https://twitter.com/malloc47" class="twitter-follow-button" data-show-count="false" data-dnt="true">Follow @malloc47</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	  <a href="https://twitter.com/malloc47" class="twitter-follow-button" data-show-count="false" data-dnt="true">Follow @malloc47</a> 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.malloc47.com%2Fposscon2013%2F&amp;send=false&amp;layout=button_count&amp;width=93&amp;show_faces=true&amp;font=arial&amp;colorscheme=light&amp;action=like&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:93px; height:21px;" allowTransparency="true"></iframe>
 	</div>
 
