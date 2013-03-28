@@ -145,7 +145,7 @@
 
         <section>
           <section>
-            <h1>A <span style="opacity:0.5;">Django</span> Project</h1>
+            <h1><span style="opacity:0.5;">Django Project</span> Structure</h1>
           </section>
 
           <section>
@@ -606,7 +606,7 @@ class BeautifulMiddleware(object):
             files = find_scss('assets/')
             for f in files:
                 print('==> Converting ' + f)
-                with open(os.path.splitext(f)[0] + '.css', 'w') as h:
+                with open(os.path.splitext(f)[0]+'.css','w') as h:
                     h.write(parser.load(f))
 
         # continue with the runserver command
